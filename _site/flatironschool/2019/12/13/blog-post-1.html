@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Finding the most frequent element in an array (Ruby) | Lluis’ Blog</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Finding the most frequent element in an array (Ruby)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Preface I’ll start off by saying my journey into the world of programming started recently and all of the content in this article should be taken with a grain of salt. I am a begginer and I am in no way am I claiming to know all the ways or the most optimal way to execute the following, but as I start diving into this very vast universe I invite you, whomever may be reading this, to join me as I dip my toes into its many topics." />
+<meta property="og:description" content="Preface I’ll start off by saying my journey into the world of programming started recently and all of the content in this article should be taken with a grain of salt. I am a begginer and I am in no way am I claiming to know all the ways or the most optimal way to execute the following, but as I start diving into this very vast universe I invite you, whomever may be reading this, to join me as I dip my toes into its many topics." />
+<link rel="canonical" href="http://localhost:4000/flatironschool/2019/12/13/blog-post-1.html" />
+<meta property="og:url" content="http://localhost:4000/flatironschool/2019/12/13/blog-post-1.html" />
+<meta property="og:site_name" content="Lluis’ Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-12-13T10:46:05-06:00" />
+<script type="application/ld+json">
+{"description":"Preface I’ll start off by saying my journey into the world of programming started recently and all of the content in this article should be taken with a grain of salt. I am a begginer and I am in no way am I claiming to know all the ways or the most optimal way to execute the following, but as I start diving into this very vast universe I invite you, whomever may be reading this, to join me as I dip my toes into its many topics.","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/flatironschool/2019/12/13/blog-post-1.html"},"@type":"BlogPosting","url":"http://localhost:4000/flatironschool/2019/12/13/blog-post-1.html","headline":"Finding the most frequent element in an array (Ruby)","dateModified":"2019-12-13T10:46:05-06:00","datePublished":"2019-12-13T10:46:05-06:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Lluis' Blog" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Lluis&#39; Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Finding the most frequent element in an array (Ruby)</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-12-13T10:46:05-06:00" itemprop="datePublished">Dec 13, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="preface">Preface</h2>
+<p>I’ll start off by saying my journey into the world of programming started recently and all of the content in this article should be taken with a grain of salt. I am a begginer and I am in no way am I claiming to know all the ways or the most optimal way to execute the following, but as I start diving into this very vast universe I invite you, whomever may be reading this, to join me as I dip my toes into its many topics.</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>As I started writing some basic Ruby programs, I made a habit of using <a href="https://ruby-doc.org" title="Help and documentation for the Ruby programming language">Ruby’s documentation</a> to look up many of its in-built methods and <strong>stop trying to reinvent the wheel</strong>. It’s a pretty neat tool to reference! I came across multiple array methods that all had very useful outputs, but I was looking for something along the lines of <code class="language-plaintext highlighter-rouge">.freq</code>, <code class="language-plaintext highlighter-rouge">.mode</code>, or similar. The idea of what I was trying to do seemed simple enough that it would be a prebuilt Ruby method, or so I thought…</p>
+
+<p>To give some context, with a given array:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">arr</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">]</span></code></pre></figure>
+
+<p>I wanted to apply something along the lines of</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">arr</span><span class="p">.</span><span class="nf">freq</span>
+<span class="c1">#or</span>
+<span class="n">arr</span><span class="p">.</span><span class="nf">mode</span></code></pre></figure>
+
+<p>In order to get the following output:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">arr</span><span class="p">.</span><span class="nf">freq</span>
+<span class="o">=&gt;</span><span class="p">[</span><span class="s2">"a"</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="c1"># "a" being the most repeated element, 3 being the times it was repeated.</span></code></pre></figure>
+
+<p>but I had no luck. Time to invent this wheel.</p>
+
+<p>Before doing so, I started getting into the habit of doing what any other programmer would do. I tried googling for a solution. I surely <em>cannot</em> be the first person to ever try to do something like this. Coincidentially around the same time this popped up in my reddit feed…</p>
+
+<center><img src="https://i.redd.it/jd25yqv8xsf31.jpg" alt="drawing" width="350" />
+<p><i>shoutout to r/programmerhumor</i></p></center>
+
+<h2 id="back-to-the-problem">Back to the Problem</h2>
+
+<p>What I found is that there are multiple ways to go about this. Here, I will showcase the way that made the most sense to me as a beginner but please refer to the bottom of this post to see more resources related to the topic.</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<h4 id="scenario">Scenario</h4>
+
+<p>First, lets set up an scenario where this would be useful. Imagine you had to identify what is the most repeated letter in a sentence. You’d take in a string as an argument and go from there. As we go through this, we’ll use the following sentence as an example:</p>
+
+<p><code class="language-plaintext highlighter-rouge">"The quick brown fox jumps over the lazy dog"</code></p>
+
+<h4 id="expectation">Expectation</h4>
+
+<p>We want our output to be an array of two elements (<code class="language-plaintext highlighter-rouge">[element, times_repeated]</code>) where you would be able to call on <code class="language-plaintext highlighter-rouge">array.first</code> and get the element, then <code class="language-plaintext highlighter-rouge">array.last</code> to get the amount of times it was found in the string.</p>
+
+<h4 id="moving-on">Moving on…</h4>
+
+<p>A string can have many characters that are not necessarily letters, so maybe you’d want to filter out those first. Using the <code class="language-plaintext highlighter-rouge">.scan</code> method and a regular expression, we can create an array which will hold all the characters in the string as individual elements.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">most_common_letter</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">sentence</span><span class="p">.</span><span class="nf">scan</span><span class="p">([</span><span class="sr">/[a-z]/</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"h"</span><span class="p">,</span><span class="s2">"e"</span><span class="p">,</span><span class="s2">"q"</span><span class="p">,</span><span class="s2">"u"</span><span class="p">,</span><span class="s2">"i"</span><span class="p">,</span><span class="s2">"c"</span><span class="p">,</span><span class="s2">"k"</span><span class="p">,</span><span class="s2">"b"</span><span class="p">,</span><span class="s2">"r"</span><span class="p">,</span><span class="s2">"o"</span><span class="p">,</span><span class="s2">"w"</span><span class="p">,</span><span class="s2">"n"</span><span class="p">,</span><span class="s2">"f"</span><span class="p">,</span><span class="s2">"o"</span><span class="p">,</span><span class="s2">"x"</span><span class="p">,</span><span class="s2">"j"</span><span class="p">,</span><span class="s2">"u"</span><span class="p">,</span><span class="s2">"m"</span><span class="p">,</span><span class="s2">"p"</span><span class="p">,</span><span class="s2">"s"</span><span class="p">,</span><span class="s2">"o"</span><span class="p">,</span><span class="s2">"v"</span><span class="p">,</span><span class="s2">"e"</span><span class="p">,</span><span class="s2">"r"</span><span class="p">,</span><span class="s2">"t"</span><span class="p">,</span><span class="s2">"h"</span><span class="p">,</span><span class="s2">"e"</span><span class="p">,</span><span class="s2">"l"</span><span class="p">,</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"z"</span><span class="p">,</span><span class="s2">"y"</span><span class="p">,</span><span class="s2">"d"</span><span class="p">,</span><span class="s2">"o"</span><span class="p">,</span><span class="s2">"g"</span><span class="p">]</span></code></pre></figure>
+
+<p>See the pattern here? but wait a second… where did the first letter go? our regexp filtered it out so we might have to do the following instead:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">most_common_letter</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="nf">text</span><span class="p">.</span><span class="nf">downcase</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/[a-z]/</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="o">=&gt;</span><span class="p">[</span><span class="s2">"t"</span><span class="p">,</span><span class="s2">"h"</span><span class="p">,</span><span class="s2">"e"</span><span class="p">,</span><span class="s2">"q"</span><span class="p">,</span><span class="s2">"u"</span><span class="p">,</span><span class="s2">"i"</span><span class="p">,</span><span class="s2">"c"</span><span class="p">,</span><span class="s2">"k"</span><span class="p">,</span><span class="s2">"b"</span><span class="p">,</span><span class="s2">"r"</span><span class="p">,</span><span class="s2">"o"</span><span class="p">,</span><span class="s2">"w"</span><span class="p">,</span><span class="s2">"n"</span><span class="p">,</span><span class="s2">"f"</span><span class="p">,</span><span class="s2">"o"</span><span class="p">,</span><span class="s2">"x"</span><span class="p">,</span><span class="s2">"j"</span><span class="p">,</span><span class="s2">"u"</span><span class="p">,</span><span class="s2">"m"</span><span class="p">,</span><span class="s2">"p"</span><span class="p">,</span><span class="s2">"s"</span><span class="p">,</span><span class="s2">"o"</span><span class="p">,</span><span class="s2">"v"</span><span class="p">,</span><span class="s2">"e"</span><span class="p">,</span><span class="s2">"r"</span><span class="p">,</span><span class="s2">"t"</span><span class="p">,</span><span class="s2">"h"</span><span class="p">,</span><span class="s2">"e"</span><span class="p">,</span><span class="s2">"l"</span><span class="p">,</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"z"</span><span class="p">,</span><span class="s2">"y"</span><span class="p">,</span><span class="s2">"d"</span><span class="p">,</span><span class="s2">"o"</span><span class="p">,</span><span class="s2">"g"</span><span class="p">]</span></code></pre></figure>
+
+<p>There we go. There’s our quick brown fox :wolf:</p>
+
+<p>Notice the “t” element (the very first one) that was previously filtered out because it was a capital T.</p>
+
+<p>Just like there are not any Array methods that would output the most frequent element in the array, I could not find any String methods that would do something similar. We want to map every unique letter to a hash’s key and set the value to however many times it is repeated.</p>
+
+<p>Next, we will define a new hash and then iterate through the array assigning a letter as a key and its value to 1 if the letter is not yet in the hash, or adding 1 to its value if it already exists.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">most_common_letter</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="nf">text</span><span class="p">.</span><span class="nf">downcase</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/[a-z]/</span><span class="p">)</span>
+
+    <span class="n">letter_hash</span> <span class="o">=</span> <span class="no">Hash</span><span class="p">.</span><span class="nf">new</span>
+
+    <span class="n">arr</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">letter</span><span class="o">|</span>
+        <span class="k">if</span> <span class="n">letter_hash</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span>
+            <span class="n">letter_hash</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span>
+            <span class="n">letter_hash</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>Now we have a letter_hash where the key corresponds to every unique letter in the string input and the value to the times it was repeated. Looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">letter_hash</span>
+<span class="o">=&gt;</span> 
+<span class="p">{</span><span class="s2">"t"</span><span class="o">=&gt;</span><span class="mi">2</span><span class="p">,</span>
+ <span class="s2">"h"</span><span class="o">=&gt;</span><span class="mi">2</span><span class="p">,</span>
+ <span class="s2">"e"</span><span class="o">=&gt;</span><span class="mi">3</span><span class="p">,</span>
+ <span class="s2">"q"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"u"</span><span class="o">=&gt;</span><span class="mi">2</span><span class="p">,</span>
+ <span class="s2">"i"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"c"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"k"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"b"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"r"</span><span class="o">=&gt;</span><span class="mi">2</span><span class="p">,</span>
+ <span class="s2">"o"</span><span class="o">=&gt;</span><span class="mi">4</span><span class="p">,</span>
+ <span class="s2">"w"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"n"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"f"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"x"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"j"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"m"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"p"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"s"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"v"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"l"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"a"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"z"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"y"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"d"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+ <span class="s2">"g"</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">}</span></code></pre></figure>
+
+<p>Next, we can call on a Ruby Hash method <code class="language-plaintext highlighter-rouge">.max_by</code> on our letter_hash, where it would find the <code class="language-plaintext highlighter-rouge">key =&gt; value</code> with the highest value according to the parameters we set to it. For our purposes, we want to return the <code class="language-plaintext highlighter-rouge">key =&gt; value</code> pair with the highest value.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">most_freq</span> <span class="o">=</span> <span class="n">letter_hash</span><span class="p">.</span><span class="nf">max_by</span> <span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="n">v</span><span class="p">}</span>
+
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"o"</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span></code></pre></figure>
+
+<p>Setting it to a variable conveniently lets us call <code class="language-plaintext highlighter-rouge">.first</code> or <code class="language-plaintext highlighter-rouge">.last</code> on it to get the key and value, respectively.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">most_freq</span><span class="p">.</span><span class="nf">first</span>
+<span class="o">=&gt;</span> <span class="s2">"o"</span>
+
+<span class="n">most_freq</span><span class="p">.</span><span class="nf">last</span>
+<span class="o">=&gt;</span> <span class="mi">4</span></code></pre></figure>
+
+<p>And there you have it! The most used letter in <code class="language-plaintext highlighter-rouge">"The quick brown fox jumps over the lazy dog"</code> is <code class="language-plaintext highlighter-rouge">"o"</code> and it was used <code class="language-plaintext highlighter-rouge">4</code> times.</p>
+
+<center><img src="https://cdn.betterttv.net/emote/5d38aaa592fc550c2d5996b8/3x" alt="drawing" width="100" /></center>
+
+<p>Huge shoutout to all the resources online and all the people that take the time to answer questions in websites like StackOverflow. This is a small contribution to give back to the community that helped me out, and hopefully this reading will save someone hours of reading through multiple forums looking for answers or theorizing how to go about doing this. My advice is to not look so much, but try out yourself. Go into a Pry session and play around with your values and what outputs you’re getting! The best way to learn new content is by doing, and then you can refactor what you already know. In the future, I’ll probably find an easier way to implement this on my methods, but for now this is a very simple way to grasp the concept.</p>
+
+<h4 id="other-resources">Other Resources:</h4>
+
+<p>If you want to keep reading about the topic and see how other people did this, check out these links:</p>
+
+<p><a href="https://medium.com/better-programming/two-ways-of-finding-the-element-that-occurs-the-most-in-an-array-with-ruby-7fb484ea1a6d" title="Most Frequent Ocurring Item in Array">Find the Most Frequently Occurring Element in an Array With Ruby</a></p>
+
+<p><a href="https://stackoverflow.com/questions/569694/how-to-count-duplicate-elements-in-a-ruby-array" title="Duplicate items">How to count duplicate elements in a Ruby array</a></p>
+
+<p><a href="https://stackoverflow.com/questions/8921999/ruby-how-to-find-and-return-a-duplicate-value-in-array/31354262">Ruby: How to find and return a duplicate value in array?</a></p>
+
+  </div><a class="u-url" href="/flatironschool/2019/12/13/blog-post-1.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Lluis&#39; Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Lluis&#39; Blog</li><li><a class="u-email" href="mailto:lluisguardiola.h@gmail.com">lluisguardiola.h@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
