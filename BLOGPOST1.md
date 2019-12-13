@@ -1,0 +1,161 @@
+# Finding the most frequent element in an array (Ruby)
+## Preface
+I'll start off by saying my journey into the world of programming started recently and all of the content in this article should be taken with a grain of salt. I am a begginer and I am in no way am I claiming to know all the ways or the most optimal way to execute the following, but as I start diving into this very vast universe I invite you, whomever may be reading this, to join me as I dip my toes into its many topics.
+
+## Introduction
+
+As I started writing some basic Ruby programs, I made a habit of using [Ruby's documentation](https://ruby-doc.org "Help and documentation for the Ruby programming language") to look up many of its in-built methods and __stop trying to reinvent the wheel__. It's a pretty neat tool to reference! I came across multiple array methods that all had very useful outputs, but I was looking for something along the lines of ```.freq```, ```.mode```, or similar. The idea of what I was trying to do seemed simple enough that it would be a prebuilt Ruby method, or so I thought...
+
+To give some context, with a given array: 
+```Ruby
+arr = ["a", "a", "a", "b", "b", "c"]
+```
+I wanted to apply something along the lines of
+```Ruby
+arr.freq
+#or
+arr.mode
+```
+In order to get the following output:
+```Ruby
+arr.freq
+=>["a", 3]
+# "a" being the most repeated element, 3 being the times it was repeated.
+```
+but I had no luck. Time to invent this wheel. 
+
+Before doing so, I started getting into the habit of doing what any other programmer would do. I tried googling for a solution. I surely _cannot_ be the first person to ever try to do something like this. Coincidentially around the same time this popped up in my reddit feed... 
+<center><img src="https://i.redd.it/jd25yqv8xsf31.jpg" alt="drawing" width="350">
+<p><i>shoutout to r/programmerhumor</i></p></center>
+
+## Back to the Problem
+
+What I found is that there are multiple ways to go about this. Here, I will showcase the way that made the most sense to me as a beginner but please refer to the bottom of this post to see more resources related to the topic. 
+
+## Implementation
+
+#### Scenario
+
+First, lets set up an scenario where this would be useful. Imagine you had to identify what is the most repeated letter in a sentence. You'd take in a string as an argument and go from there. As we go through this, we'll use the following sentence as an example:
+
+```"The quick brown fox jumps over the lazy dog"```
+
+#### Expectation
+
+We want our output to be an array of two elements (```[element, times_repeated]```) where you would be able to call on ```array.first``` and get the element, then ```array.last``` to get the amount of times it was found in the string.
+
+#### Moving on...
+
+A string can have many characters that are not necessarily letters, so maybe you'd want to filter out those first. Using the ```.scan``` method and a regular expression, we can create an array which will hold all the characters in the string as individual elements. 
+
+```Ruby
+def most_common_letter(sentence)
+    arr = sentence.scan([/[a-z]/)
+end
+
+=> ["h","e","q","u","i","c","k","b","r","o","w","n","f","o","x","j","u","m","p","s","o","v","e","r","t","h","e","l","a","z","y","d","o","g"]
+```
+
+See the pattern here? but wait a second... where did the first letter go? our regexp filtered it out so we might have to do the following instead:
+
+```Ruby
+def most_common_letter(sentence)
+    arr = self.text.downcase.scan(/[a-z]/)
+end
+
+=>["t","h","e","q","u","i","c","k","b","r","o","w","n","f","o","x","j","u","m","p","s","o","v","e","r","t","h","e","l","a","z","y","d","o","g"]
+```
+
+There we go. There's our quick brown fox :wolf: 
+
+Notice the "t" element (the very first one) that was previously filtered out because it was a capital T.
+
+Just like there are not any Array methods that would output the most frequent element in the array, I could not find any String methods that would do something similar. We want to map every unique letter to a hash's key and set the value to however many times it is repeated. 
+
+Next, we will define a new hash and then iterate through the array assigning a letter as a key and its value to 1 if the letter is not yet in the hash, or adding 1 to its value if it already exists.
+
+```Ruby
+def most_common_letter
+    arr = self.text.downcase.scan(/[a-z]/)
+
+    letter_hash = Hash.new
+
+    arr.each do |letter|
+        if letter_hash[letter]
+            letter_hash[letter] += 1
+        else
+            letter_hash[letter] = 1
+        end
+    end
+end
+```
+
+Now we have a letter_hash where the key corresponds to every unique letter in the string input and the value to the times it was repeated. Looks like this:
+
+```Ruby
+letter_hash
+=> 
+{"t"=>2,
+ "h"=>2,
+ "e"=>3,
+ "q"=>1,
+ "u"=>2,
+ "i"=>1,
+ "c"=>1,
+ "k"=>1,
+ "b"=>1,
+ "r"=>2,
+ "o"=>4,
+ "w"=>1,
+ "n"=>1,
+ "f"=>1,
+ "x"=>1,
+ "j"=>1,
+ "m"=>1,
+ "p"=>1,
+ "s"=>1,
+ "v"=>1,
+ "l"=>1,
+ "a"=>1,
+ "z"=>1,
+ "y"=>1,
+ "d"=>1,
+ "g"=>1}
+```
+
+Next, we can call on a Ruby Hash method ```.max_by``` on our letter_hash, where it would find the ```key => value``` with the highest value according to the parameters we set to it. For our purposes, we want to return the ```key => value``` pair with the highest value. 
+
+```Ruby
+most_freq = letter_hash.max_by {|k,v| v}
+
+=> ["o", 4]
+```
+
+Setting it to a variable conveniently lets us call ```.first``` or ```.last``` on it to get the key and value, respectively.
+
+```Ruby
+most_freq.first
+=> "o"
+
+most_freq.last
+=> 4
+```
+
+And there you have it! The most used letter in ```"The quick brown fox jumps over the lazy dog"``` is ```"o"``` and it was used ```4``` times.
+
+<center><img src="https://cdn.betterttv.net/emote/5d38aaa592fc550c2d5996b8/3x" alt="drawing" width="100"></center>
+
+
+Huge shoutout to all the resources online and all the people that take the time to answer questions in websites like StackOverflow. This is a small contribution to give back to the community that helped me out, and hopefully this reading will save someone hours of reading through multiple forums looking for answers or theorizing how to go about doing this. My advice is to not look so much, but try out yourself. Go into a Pry session and play around with your values and what outputs you're getting! The best way to learn new content is by doing, and then you can refactor what you already know. In the future, I'll probably find an easier way to implement this on my methods, but for now this is a very simple way to grasp the concept.
+
+
+#### Other Resources:
+
+If you want to keep reading about the topic and see how other people did this, check out these links:
+
+
+[Find the Most Frequently Occurring Element in an Array With Ruby](https://medium.com/better-programming/two-ways-of-finding-the-element-that-occurs-the-most-in-an-array-with-ruby-7fb484ea1a6d "Most Frequent Ocurring Item in Array")
+
+[How to count duplicate elements in a Ruby array](https://stackoverflow.com/questions/569694/how-to-count-duplicate-elements-in-a-ruby-array "Duplicate items")
+
+[Ruby: How to find and return a duplicate value in array?](https://stackoverflow.com/questions/8921999/ruby-how-to-find-and-return-a-duplicate-value-in-array/31354262)
